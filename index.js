@@ -25,7 +25,23 @@ var RSNBController = RSNBApp.controller("RSNBController",
       notebook = $scope.current;
     }
       
-    var nb = Object.assign({}, notebook);
+    var nb = Object.assign({
+      "metadata" : {
+        "kernel_info": {
+            "name" : "Browser ECMAScript"
+        },
+        "language_info": {
+            "name" : "ECMAScript",
+            "version": "6",
+            "codemirror_mode": "javascript"
+        }
+      },
+      "nbformat": 4,
+      "nbformat_minor": 0,
+      "cells" : [
+      ]
+    }, notebook);
+
     nb.cells = nb.cells.map((cell, i) => {
       var cellCopy = Object.assign({}, cell)
       Object.assign(cellCopy, {
@@ -208,10 +224,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
      "cells": [
       {
        "cell_type": "code",
-       "execution_count": null,
        "metadata": {},
-       "outputs": [],
-       "source": []
+       "source": ``,
       }
      ],
      "metadata": {
@@ -219,8 +233,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
        "name": "Javascript (Browser)"
       },
       "language_info": {
-        "name" : "Javascript",
-        "version": "262",
+        "name" : "ECMAScript",
+        "version": "6",
         "codemirror_mode": "javascript"
       }
      },
@@ -274,16 +288,16 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
         var output = {
           "output_type" : "application/json",
-          "execution_count": cell.execution_count ? ++cell.execution_count: null,
+          "execution_count": null,
           "data" : result,
           "metadata": {}
         };
-      
-        cell.outputs = [output];
-        cell.execution_count = cell.execution_count ? ++cell.execution_count : null;
 
-        if("$schema" in Object.keys(output)){
-          visualize(output)
+        cell.outputs = [output];
+        cell.execution_count = null;
+
+        if($scope.isVega(output)){
+          $scope.visualize(cell);
         }
 
         break;
@@ -315,7 +329,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
     
   $scope.runAll = function(notebook){
     notebook.cells = notebook.cells.map(function(cell){
-      if(cell.cell_type == 'code'){
+      if(cell.cell_type == 'code' || 'external_code'){
         $scope.run(cell, cell.cellSource);
       }
       return cell;
@@ -367,14 +381,19 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
   $scope.isVega = function(potVega){
     if(!potVega) return false;
-    return Object.keys(potVega).indexOf('$schema') > -1 && potVega.$schema == "https://vega.github.io/schema/vega/v5.json";
+    return potVega.data && potVega.encoding && potVega.mark;
   }
       
   $scope.visualize = function(cell){
-    if($scope.isVega($scope.getOutput(cell)))
-    vegaEmbed(`.output${cell.index}`, $scope.getOutput(cell)).then(result => {
-      cell.visualization = result;
-    })
+    if($scope.isVega($scope.getOutput(cell))){
+      vegaEmbed(
+        `.output${cell.index}`, 
+        $scope.getOutput(cell)
+      ).then(result => {
+          cell.visualization = result;
+        }
+      )
+    }
   }
       
   $scope.visualizeAll = function(notebook){
