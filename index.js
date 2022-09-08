@@ -274,13 +274,18 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
         var output = {
           "output_type" : "application/json",
-          "execution_count": 42,
+          "execution_count": cell.execution_count ? ++cell.execution_count: null,
           "data" : result,
           "metadata": {}
         };
       
         cell.outputs = [output];
-        cell.execution_count = cell.execution_count === null ? 0 : cell.execution_count + 1;
+        cell.execution_count = cell.execution_count ? ++cell.execution_count : null;
+
+        if("$schema" in Object.keys(output)){
+          visualize(output)
+        }
+
         break;
 
       case 'external_code':
@@ -362,7 +367,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
   $scope.isVega = function(potVega){
     if(!potVega) return false;
-    return Object.keys(potVega).indexOf('$schema') > -1;
+    return Object.keys(potVega).indexOf('$schema') > -1 && potVega.$schema == "https://vega.github.io/schema/vega/v5.json";
   }
       
   $scope.visualize = function(cell){
