@@ -250,20 +250,20 @@
                 <!-- HTML -->
                 <div 
                   ng-if="isHTML(getOutput(cell)) && cell.cell_type == 'code'" 
-                  ng-init="collapsed_html = true" 
-                  ng-show="isHTML(getOutput(cell))">
+                  ng-init="collapsed_html = false" 
+                  ng-show="getOutput(cell) !== undefined">
                   HTML [
                   <a
                     ng-name="showHide{{$index}}" 
                     ng-href="#showHide{{$index}}" 
                     class="link link-secondary" 
-                    ng-click="collapsed_html = !collapsed_array">
+                    ng-click="collapsed_html = !collapsed_html">
                     <label ng-show="collapsed_html">+</label>
                     <label ng-show="!collapsed_html">-</label>
                   </a>
                   ]
                   <div class="output{{$index}}" ng-show="!collapsed_html">
-                    {{getOutput(cell)}}
+                    <div ng-bind-html="getOutput(cell) | unsafe"></div>
                   </div>
                 </div>
               </li>
