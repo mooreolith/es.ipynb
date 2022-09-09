@@ -1,260 +1,279 @@
 <!DOCTYPE html>
 <html ng-app="RSNBApp">
-    <head>
-        <meta charset="UTF-8">
-        <title>es.ipynb</title>
+  <head>
+    <meta charset="UTF-8">
+    <title>es.ipynb</title>
 
-        <link rel="stylesheet" href="bootstrap.min.css">
-        <link rel="stylesheet" href="codemirror.css">
-        <link rel="stylesheet" href="theme/eclipse.css">
-        <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="theme/eclipse.css">
+    <link rel="stylesheet" href="index.css">
 
-        <!-- jquery angular html5 bootstrap -->
-        <!-- it's the jhab stack -->
-        <script src="jquery.min.js"></script>
-        <script src="bootstrap.min.js"></script>
-        
-        <script src="angular.min.js"></script>
-        <script src="download.js"></script>
-        
-        <script src="codemirror.js"></script>
-        <script src="mode/javascript/javascript.js"></script>
-        <script src="mode/markdown/markdown.js"></script>
-        <script src="ui-codemirror.js"></script>
-        
-        <script src="vega.min.js"></script>
-        <script src="vega-lite.min.js"></script>
-        <script src="vega-embed.min.js"></script>
-        
-        <script src="index.js"></script>
+    <!-- jquery angular html5 bootstrap -->
+    <!-- it's the jhab stack -->
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    
+    <script src="angular.min.js"></script>
+    <script src="download.js"></script>
+    
+    <script src="codemirror.js"></script>
+    <script src="mode/javascript/javascript.js"></script>
+    <script src="mode/markdown/markdown.js"></script>
+    <script src="ui-codemirror.js"></script>
+    
+    <script src="vega.min.js"></script>
+    <script src="vega-lite.min.js"></script>
+    <script src="vega-embed.min.js"></script>
+    
+    <script src="index.js"></script>
 
-    </head>
-    <body ng-controller="RSNBController" class="bg">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="menu col-md-3">
-                    <form class="notebook-menu form">
-                        <input class="form-control" type="file" name="files[]" multiple />
-                        <button ng-click="upload()" class="form-control link text-primary">Upload Notebook</button>
-                        <button ng-click="addNotebook()" class="form-control link text-primary">New Notebook</button>
+  </head>
+  <body ng-controller="RSNBController" class="bg">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="menu col-md-3">
+          <form class="notebook-menu form">
+            <input class="form-control" type="file" name="files[]" multiple />
+            <button ng-click="upload()" class="form-control link text-primary">Upload Notebook</button>
+            <button ng-click="addNotebook()" class="form-control link text-primary">New Notebook</button>
+            
+            <a ng-if="current && location.href.startsWith('https://joshuamoore.dev') || location.href.startsWith('http://localhost') || location.href.startsWith('https://localhost')" class="form-control link text-primary" href="https://github.com/stauffenbits/es.ipynb">Source</a>
+          </form>
+          <ul class="notebook-menu list-group">
+            <hr>
+            <a class="list-group-item form-control link text-secondary"
+              name="runAll"
+              href="#runAll"
+              ng-click="runAll(current)">Run all cells</a>
+            <a class="list-group-item form-control link text-secondary"
+              name="remove"
+              href="#remove"
+              ng-click="removeNotebook(current)">Remove Notebook</a>
+            <a class="list-group-item form-control link text-secondary" 
+              name="save"
+              ng-href="#save"
+              ng-click="storeNotebook(current)">Save Notebook</a>
+            <a class="list-group-item form-control link text-secondary"
+              name="download"
+              ng-href="#download"
+              ng-click="downloadNotebook(current)">Download Notebook</a>
+            <hr>
+
+            <a class="list-group-item form-control link text-secondary" ng-repeat="notebook in notebooks track by $index" href="#" ng-click="display(notebook);">{{notebook.name}}</a>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <form ng-if="notebook == current"
+            ng-repeat="notebook in notebooks track by $index"
+            ng-init="notebook.index = $index"
+            class="form notebook notebook{{$index}}">
                         
-                        <a ng-if="current && location.href.startsWith('https://joshuamoore.dev') || location.href.startsWith('http://localhost') || location.href.startsWith('https://localhost')" class="form-control link text-primary" href="https://github.com/stauffenbits/es.ipynb">Source</a>
-                    </form>
-                    <ul class="notebook-menu list-group">
-                        <hr>
-                        <a class="list-group-item form-control link text-secondary"
-                            name="runAll"
-                            href="#runAll"
-                            ng-click="runAll(current)">Run all cells</a>
-                        <a class="list-group-item form-control link text-secondary"
-                            name="remove"
-                            href="#remove"
-                            ng-click="removeNotebook(current)">Remove Notebook</a>
-                        <a class="list-group-item form-control link text-secondary" 
-                            name="save"
-                            ng-href="#save"
-                            ng-click="storeNotebook(current)">Save Notebook</a>
-                        <a class="list-group-item form-control link text-secondary"
-                            name="download"
-                            ng-href="#download"
-                            ng-click="downloadNotebook(current)">Download Notebook</a>
-                        <hr>
+              
+            <li class="list-group-item">
+              <h3 class="form-header" href="#">{{notebook.name}}</h3>
+            </li>
 
-                        <a class="list-group-item form-control link text-secondary" ng-repeat="notebook in notebooks track by $index" href="#" ng-click="display(notebook);">{{notebook.name}}</a>
-                    </ul>
+            <a 
+              ng-name="addCellAt{{$index}}}"
+              ng-href="#addCellAt{{$index}}"
+              class="link text-secondary"
+              ng-click="addCellAt(notebook, $index)">
+              { add cell here }
+            </a>
+
+            <ul id="cells"
+              class="list-group">  
+                            
+              <li class="list-group-item" ng-repeat="cell in notebook.cells track by $index" ng-init="cell.index = $index">
+
+                {<label>
+                  <input 
+                    type="radio"
+                    ng-model="cell.cell_type"
+                    value="markdown">
+                  markdown
+                </label>
+
+                <label>
+                  <input 
+                    type="radio"
+                    ng-model="cell.cell_type"
+                    value="code">
+                  code
+                </label>
+              
+                <label>
+                  <input
+                    type="radio"
+                    ng-model="cell.cell_type"
+                    value="external_code">
+                  external code
+                </label>}
+
+                {<a
+                  ng-name="remove{{$index}}"
+                  ng-href="#remove{{$index}}"
+                  class="link text-secondary text-right"
+                  ng-click="removeCell(notebook, cell)">
+                  remove cell
+                </a>}
+
+                {<a 
+                  ng-name="addCell{{$index}}}"
+                  ng-href="#addCell{{$index}}"
+                  class="link text-secondary"
+                  ng-click="addCellAt(notebook, $index + 1)">
+                  add cell below
+                </a>}
+                
+                {<a 
+                  ng-show="['code', 'external_code'].indexOf(cell.cell_type) > -1"
+                  name="#run{{$index}}"
+                  href="#run{{$index}}" 
+                  class="link text-success text-right" 
+                  ng-click="run(cell, cell.cellSource || cell.source.join(newline))">
+                  run cell
+                </a>}
+                <br>
+                
+                <textarea ui-codemirror ui-codemirror-opts="{mode: 'javascript', theme: 'eclipse', lineWrapping: true, lineNumbers: true}"
+                  ng-if="cell.cell_type === 'code'"
+                  style="font-family: mono"
+                  cols="82" 
+                  rows="{{cell.source.length}}"
+                  ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
+                  ng-model="cell.cellSource" 
+                  data-output="#output{{$index}}"
+                  class="form-control cell code cell{{$index}}"
+                  ng-keyup="cell.source = cell.cellSource.split(newline);">
+                </textarea>
+                
+                <textarea ui-codemirror ui-codemirror-opts="{mode: 'markdown', theme: 'eclipse', lineWrapping: true, lineNumbers: true}"
+                  ng-if="cell.cell_type === 'markdown'"
+                  cols="82" 
+                  rows="cell.source.length"
+                  ng-model="cell.cellSource"
+                  ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
+                  class="form-control cell markdown cell{{$index}}"
+                  ng-keyup="cell.source = cell.cellSource.split(newline);">
+                </textarea>
+
+                <input ng-if="cell.cell_type === 'external_code'"
+                  ng-model="cell.cellSource"
+                  ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
+                  class="form-control cell cell{{$index}}"
+                  ng-keyup="cell.source = cell.cellSource.split(newline);">
+                
+                <br>
+                
+                <label class="w-100 text-truncate" ng-if="cell.cell_type == 'code' && !isHTML(getOutput(cell))">
+                  {{getOutput(cell)}}
+                </label>
+
+                
+                <div ng-if="isArray(getOutput(cell)) && cell.cell_type == 'code'" ng-init="collapsed_array = true" ng-show="isArray(getOutput(cell))">
+                  Table [
+                  <a
+                    ng-name="showHide{{$index}}" 
+                    ng-href="#showHide{{$index}}" 
+                    class="link link-secondary" 
+                    ng-click="collapsed_array = !collapsed_array">
+                    <label ng-show="collapsed_array">+</label>
+                    <label ng-show="!collapsed_array">-</label>
+                  </a>
+                  ]
+                  <table class="table" ng-show="!collapsed_array">
+                    <thead>
+                      <tr>
+                        <th scope="text-secondary">Index</th>
+                        <th scope="text">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="value in getOutput(cell) track by $index">
+                        <td class="text-secondary">{{$index}}</td>
+                        <td class="text">{{value}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <div class="col-md-9">
-                    <form ng-if="notebook == current"
-                        ng-repeat="notebook in notebooks track by $index"
-                        ng-init="notebook.index = $index"
-                        class="form notebook notebook{{$index}}">
-                                                
-                            
-                        <li class="list-group-item">
-                            <h3 class="form-header" href="#">{{notebook.name}}</h3>
-                        </li>
-
-                        <a 
-                            ng-name="addCellAt{{$index}}}"
-                            ng-href="#addCellAt{{$index}}"
-                            class="link text-secondary"
-                            ng-click="addCellAt(notebook, $index)">
-                            { add cell here }
-                        </a>
-
-                        <ul id="cells"
-                            class="list-group">    
-                                                      
-                            <li class="list-group-item" ng-repeat="cell in notebook.cells track by $index" ng-init="cell.index = $index">
-
-                                {<label>
-                                    <input 
-                                        type="radio"
-                                        ng-model="cell.cell_type"
-                                        value="markdown">
-                                    markdown
-                                </label>
-
-                                <label>
-                                    <input 
-                                      type="radio"
-                                      ng-model="cell.cell_type"
-                                      value="code">
-                                    code
-                                </label>
-                            
-                                <label>
-                                    <input
-                                        type="radio"
-                                        ng-model="cell.cell_type"
-                                        value="external_code">
-                                    external code
-                                </label>}
-
-                                {<a
-                                    ng-name="remove{{$index}}"
-                                    ng-href="#remove{{$index}}"
-                                    class="link text-secondary text-right"
-                                    ng-click="removeCell(notebook, cell)">
-                                    remove cell
-                                </a>}
-
-                                {<a 
-                                    ng-name="addCell{{$index}}}"
-                                    ng-href="#addCell{{$index}}"
-                                    class="link text-secondary"
-                                    ng-click="addCellAt(notebook, $index + 1)">
-                                    add cell below
-                                </a>}
-                                
-                                {<a 
-                                    ng-show="['code', 'external_code'].indexOf(cell.cell_type) > -1"
-                                    name="#run{{$index}}"
-                                    href="#run{{$index}}" 
-                                    class="link text-success text-right" 
-                                    ng-click="run(cell, cell.cellSource || cell.source.join(newline))">
-                                    run cell
-                                </a>}
-                                <br>
-                                
-                                <textarea ui-codemirror ui-codemirror-opts="{mode: 'javascript', theme: 'eclipse', lineWrapping: true, lineNumbers: true}"
-                                    ng-if="cell.cell_type === 'code'"
-                                    style="font-family: mono"
-                                    cols="82" 
-                                    rows="{{cell.source.length}}"
-                                    ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
-                                    ng-model="cell.cellSource" 
-                                    data-output="#output{{$index}}"
-                                    class="form-control cell code cell{{$index}}"
-                                    ng-keyup="cell.source = cell.cellSource.split(newline);">
-                                </textarea>
-                                
-                                <textarea ui-codemirror ui-codemirror-opts="{mode: 'markdown', theme: 'eclipse', lineWrapping: true, lineNumbers: true}"
-                                    ng-if="cell.cell_type === 'markdown'"
-                                    cols="82" 
-                                    rows="cell.source.length"
-                                    ng-model="cell.cellSource"
-                                    ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
-                                    class="form-control cell markdown cell{{$index}}"
-                                    ng-keyup="cell.source = cell.cellSource.split(newline);">
-                                </textarea>
-
-                                <input ng-if="cell.cell_type === 'external_code'"
-                                    ng-model="cell.cellSource"
-                                    ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
-                                    class="form-control cell cell{{$index}}"
-                                    ng-keyup="cell.source = cell.cellSource.split(newline);">
-                                
-                                <br>
-                                
-                                <label class="w-100 text-truncate" ng-if="cell.cell_type == 'code'">
-                                    {{getOutput(cell)}}
-                                </label>
-
-                                
-                                <div ng-if="isArray(getOutput(cell)) && cell.cell_type == 'code'" ng-init="collapsed_array = true" ng-show="isArray(getOutput(cell))">
-                                    Table [
-                                    <a
-                                        ng-name="showHide{{$index}}" 
-                                        ng-href="#showHide{{$index}}" 
-                                        class="link link-secondary" 
-                                        ng-click="collapsed_array = !collapsed_array">
-                                        <label ng-show="collapsed_array">+</label>
-                                        <label ng-show="!collapsed_array">-</label>
-                                    </a>
-                                    ]
-                                    <table class="table" ng-show="!collapsed_array">
-                                        <thead>
-                                            <tr>
-                                                <th scope="text-secondary">Index</th>
-                                                <th scope="text">Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="value in getOutput(cell) track by $index">
-                                                <td class="text-secondary">{{$index}}</td>
-                                                <td class="text">{{value}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <div 
-                                    ng-if="isObject(getOutput(cell)) && !isArray(getOutput(cell)) && cell.cell_type == 'code'" 
-                                    ng-init="collapsed_object = true">
-                                    Object Listing: [
-                                    <a
-                                        ng-name="showHide{{$index}}" 
-                                        ng-href="#showHide{{$index}}" 
-                                        class="link link-secondary" 
-                                        ng-click="collapsed_object = !collapsed_object">
-                                        <label ng-show="collapsed_object">+</label>
-                                        <label ng-show="!collapsed_object">-</label>
-                                    </a>
-                                    ] 
-                                    <table class="table" ng-show="!collapsed_object">
-                                        <thead>
-                                            <tr>
-                                                <th scope="text-secondary">Key</th>
-                                                <th scope="text">Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="(key, value) in getOutput(cell)">
-                                                <td class="text-secondary">{{key}}</td>
-                                                <td class="text">{{getOutput(cell)[key]}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <!-- Visualization -->
-                                <div 
-                                    ng-init="collapsed_vis = true"
-                                    ng-if="isVega(getOutput(cell)) && cell.cell_type == 'code'">
-                                    Visualization: [ 
-                                    <a
-                                        ng-name="showHide{{$index}}" 
-                                        ng-href="#showHide{{$index}}" 
-                                        class="link link-secondary" 
-                                        ng-click="collapsed_vis = !collapsed_vis">
-                                        <label ng-show="collapsed_vis">+</label>
-                                        <label ng-show="!collapsed_vis">-</label>
-                                    </a>
-                                    ] <br>
-                                    
-                                    <div id="output{{$index}}" class="output{{$index}}" ng-show="!collapsed_vis">
-                                        {{cell.visualization}}
-                                    </div>
-                                </div>
-                            </li>
-                            
-                        </ul>
-                    </form>
-
-                    <div class="full-height-spacer"></div>
+                
+                <div 
+                  ng-if="isObject(getOutput(cell)) && !isArray(getOutput(cell)) && !isHTML(getOutput(cell)) && cell.cell_type == 'code'" 
+                  ng-init="collapsed_object = false">
+                  Object Listing: [
+                  <a
+                    ng-name="showHide{{$index}}" 
+                    ng-href="#showHide{{$index}}" 
+                    class="link link-secondary" 
+                    ng-click="collapsed_object = !collapsed_object">
+                    <label ng-show="collapsed_object">+</label>
+                    <label ng-show="!collapsed_object">-</label>
+                  </a>] 
+                  <table class="table" ng-show="!collapsed_object">
+                    <thead>
+                      <tr>
+                        <th scope="text-secondary">Key</th>
+                        <th scope="text">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="(key, value) in getOutput(cell)">
+                        <td class="text-secondary">{{key}}</td>
+                        <td class="text">{{getOutput(cell)[key]}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-            </div>
-        </div>   
-    </body>
+
+                <!-- Visualization -->
+                <div 
+                  ng-init="collapsed_vis = true"
+                  ng-if="isVega(getOutput(cell)) && cell.cell_type == 'code'">
+                  Visualization: [ 
+                  <a
+                    ng-name="showHide{{$index}}" 
+                    ng-href="#showHide{{$index}}" 
+                    class="link link-secondary" 
+                    ng-click="collapsed_vis = !collapsed_vis">
+                    <label ng-show="collapsed_vis">+</label>
+                    <label ng-show="!collapsed_vis">-</label>
+                  </a>
+                  ] <br>
+                  
+                  <div id="output{{$index}}" class="output{{$index}}" ng-show="!collapsed_vis">
+                    {{cell.visualization}}
+                  </div>
+                </div>
+
+                <!-- HTML -->
+                <div 
+                  ng-if="isHTML(getOutput(cell)) && cell.cell_type == 'code'" 
+                  ng-init="collapsed_html = true" 
+                  ng-show="isHTML(getOutput(cell))">
+                  HTML [
+                  <a
+                    ng-name="showHide{{$index}}" 
+                    ng-href="#showHide{{$index}}" 
+                    class="link link-secondary" 
+                    ng-click="collapsed_html = !collapsed_array">
+                    <label ng-show="collapsed_html">+</label>
+                    <label ng-show="!collapsed_html">-</label>
+                  </a>
+                  ]
+                  <div class="output{{$index}}" ng-show="!collapsed_html">
+                    {{getOutput(cell)}}
+                  </div>
+                </div>
+              </li>
+              
+            </ul>
+          </form>
+
+          <div class="full-height-spacer"></div>
+        </div>
+      </div>
+    </div>   
+  </body>
 </html>

@@ -107,11 +107,11 @@ var RSNBController = RSNBApp.controller("RSNBController",
 
     cell.editor.codemirror.setValue(cell.source.join(''));
     cell.editor.codemirror.setOption('theme', 'eclipse');
-    cell.editor.codemirror.addKeyMap('Ctrl-Enter', function(){
+    /*cell.editor.codemirror.addKeyMap('Ctrl-Enter', function(){
       console.log('ctrl-enter');
       $scope.run(cell, cell.source.join('\n'));
-    })
-    cell.cellSource = cell.source.join('\n');
+    })*/
+    cell.cellSource = cell.source.join($scope.newline);
 
     return cell;
   }
@@ -173,7 +173,9 @@ var RSNBController = RSNBApp.controller("RSNBController",
   $scope.display = function(notebook){
     if(!notebook) return;
     $scope.current = notebook;
-    $scope.currents = [$scope.current]
+    $scope.currents = [$scope.current];
+
+    $scope.currentCell = $scope.current.cells[0];
     // $scope.initAllMarkdownCells(notebook);
     // $scope.initAllCodeCells(notebook)
   }
@@ -296,6 +298,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
     switch(cell.cell_type){
       case 'code':
         cell.source = code.split($scope.newline);
+        
         var result = window.eval(code);
       
         var output = {
@@ -387,6 +390,14 @@ var RSNBController = RSNBApp.controller("RSNBController",
     
   $scope.isArray = function(potArr){
     return potArr instanceof Array;
+  }
+
+  $scope.isHTML = function(potHTML){
+    try {
+      const fragment = new DOMParser().parseFromString(potHTML,"text/html");
+      return fragment.body.children.length>0
+    } catch(error) { ; }  
+    return false;
   }
       
   $scope.isVega = function(potVega){
