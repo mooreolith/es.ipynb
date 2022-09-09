@@ -6,6 +6,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
   $scope.notebooks = [];
   $scope.current = null;
   $scope.currents = [];
+
+  $scope.currentCell = null;
       
   $scope.reservedNames = [
     'initialized', 
@@ -14,7 +16,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
   $scope.newline = '\n';
     
   // https://stackoverflow.com/a/10080841
-  $("textarea").keyup(function(e) {
+  $("textarea.code.cell").bind('input', function(e) {
     while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
         $(this).height($(this).height()+1);
     };
@@ -95,8 +97,9 @@ var RSNBController = RSNBApp.controller("RSNBController",
     if(!cell.editor){
       cell.editorOptions = {
         mode:  "javascript",
-        lineNumbers: true
+        lineNumbers: true, 
       }
+
       cell.editor = {
         codemirror: CodeMirror.fromTextArea(elem, cell.editorOptions)
       };
@@ -104,9 +107,18 @@ var RSNBController = RSNBApp.controller("RSNBController",
 
     cell.editor.codemirror.setValue(cell.source.join(''));
     cell.editor.codemirror.setOption('theme', 'eclipse');
-    cell.cellSource = cell.source.join('')
+    cell.editor.codemirror.addKeyMap('Ctrl-Enter', function(){
+      console.log('ctrl-enter');
+      $scope.run(cell, cell.source.join('\n'));
+    })
+    cell.cellSource = cell.source.join('\n');
 
     return cell;
+  }
+
+  $scope.setCurrent = function(notebook, cell){
+    $scope.current = notebook;
+    $scope.currentCell = cell;
   }
       
   $scope.initMarkdownCell = function(nbIndex, cellIndex){
@@ -213,7 +225,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
       }
     })
   }
-    
+
   $scope.addNotebook = function(){
     var name = prompt('A Name for the Notebook?');
     if(!name) return;
@@ -280,7 +292,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
     return 
   }
     
-  $scope.run = function(cell, code){
+  $scope.run = async function(cell, code){
     switch(cell.cell_type){
       case 'code':
         cell.source = code.split($scope.newline);
@@ -296,9 +308,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
         cell.outputs = [output];
         cell.execution_count = null;
 
-        if($scope.isVega(output)){
-          $scope.visualize(cell);
-        }
+        await $scope.visualize(cell);
 
         break;
 
@@ -386,9 +396,11 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
   $scope.visualize = function(cell){
     if($scope.isVega($scope.getOutput(cell))){
+      var output = $scope.getOutput(cell);
+      cell.show = false;
       vegaEmbed(
         `.output${cell.index}`, 
-        $scope.getOutput(cell)
+        output
       ).then(result => {
           cell.visualization = result;
         }
@@ -407,17 +419,6 @@ var RSNBController = RSNBApp.controller("RSNBController",
       delete cell.visualization;
     }
   }
-      
-  $(window).bind('keydown', function(event){
-    if (event.ctrlKey || event.metaKey) {
-      switch (String.fromCharCode(event.which).toLowerCase()) {
-        case 's':
-          event.preventDefault();
-          $scope.storeNotebook($scope.current);
-          break;
-      }
-    }
-  });
       
   this.$onInit = function(){
     if(!window.localStorage.getItem('initialized')){
