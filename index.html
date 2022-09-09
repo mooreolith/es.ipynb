@@ -2,17 +2,37 @@
 <html ng-app="RSNBApp">
     <head>
         <meta charset="UTF-8">
-        <title>es.ipynb admin</title>
+        <title>es.ipynb</title>
 
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="codemirror.css">
         <link rel="stylesheet" href="theme/eclipse.css">
         <link rel="stylesheet" href="index.css">
+
+        <!-- jquery angular html5 bootstrap -->
+        <!-- it's the jhab stack -->
+        <script src="jquery.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        
+        <script src="angular.min.js"></script>
+        <script src="download.js"></script>
+        
+        <script src="codemirror.js"></script>
+        <script src="mode/javascript/javascript.js"></script>
+        <script src="mode/markdown/markdown.js"></script>
+        <script src="ui-codemirror.js"></script>
+        
+        <script src="vega.min.js"></script>
+        <script src="vega-lite.min.js"></script>
+        <script src="vega-embed.min.js"></script>
+        
+        <script src="index.js"></script>
+
     </head>
     <body ng-controller="RSNBController" class="bg">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4">
+                <div class="menu col-md-3">
                     <form class="notebook-menu form">
                         <input class="form-control" type="file" name="files[]" multiple />
                         <button ng-click="upload()" class="form-control link text-primary">Upload Notebook</button>
@@ -43,7 +63,7 @@
                         <a class="list-group-item form-control link text-secondary" ng-repeat="notebook in notebooks track by $index" href="#" ng-click="display(notebook);">{{notebook.name}}</a>
                     </ul>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <form ng-if="notebook == current"
                         ng-repeat="notebook in notebooks track by $index"
                         ng-init="notebook.index = $index"
@@ -124,6 +144,7 @@
                                     rows="{{cell.source.length}}"
                                     ng-init="cell.cellSource = cell.cellSource ? cell.cellSource : cell.source.join('').trim();"
                                     ng-model="cell.cellSource" 
+                                    data-output="#output{{$index}}"
                                     class="form-control cell code cell{{$index}}"
                                     ng-keyup="cell.source = cell.cellSource.split(newline);">
                                 </textarea>
@@ -178,7 +199,9 @@
                                     </table>
                                 </div>
                                 
-                                <div ng-if="isObject(getOutput(cell)) && !isArray(getOutput(cell)) && cell.cell_type == 'code'" ng-init="collapsed_object = true">
+                                <div 
+                                    ng-if="isObject(getOutput(cell)) && !isArray(getOutput(cell)) && cell.cell_type == 'code'" 
+                                    ng-init="collapsed_object = true">
                                     Object Listing: [
                                     <a
                                         ng-name="showHide{{$index}}" 
@@ -205,52 +228,33 @@
                                     </table>
                                 </div>
                                 
+                                <!-- Visualization -->
                                 <div 
-                                     ng-if="isVega(getOutput(cell)) && cell.cell_type == 'code'" 
-                                     class="flex-fill" 
-                                     ng-init="collapsed_vis = false">
-                                    Visualization: [
+                                    ng-init="collapsed_vis = true"
+                                    ng-if="isVega(getOutput(cell)) && cell.cell_type == 'code'">
+                                    Visualization: [ 
                                     <a
-                                       ng-name="showHideVis{{$index}}"
-                                       ng-href="#showHideVis{{$index}}"
-                                       class="link link-secondary"
-                                       ng-click="collapsed_vis = !collapsed_vis; visualize(cell);">
-                                       <label ng-show="collapsed_vis"
-                                              ng-click="collapsed_vis = false">+</label>
-                                       <label ng-show="!collapsed_vis"
-                                              ng-click="collpsed_vis = true">-</label>
+                                        ng-name="showHide{{$index}}" 
+                                        ng-href="#showHide{{$index}}" 
+                                        class="link link-secondary" 
+                                        ng-click="collapsed_vis = !collapsed_vis">
+                                        <label ng-show="collapsed_vis">+</label>
+                                        <label ng-show="!collapsed_vis">-</label>
                                     </a>
-                                    ]
-                                    <label for="#output{{$index}}">Output:</label>
-                                    <div id="output{{$index}}" class="output{{$index}}">
-                                        
+                                    ] <br>
+                                    
+                                    <div id="output{{$index}}" class="output{{$index}}" ng-show="!collapsed_vis">
+                                        {{cell.visualization}}
                                     </div>
                                 </div>
                             </li>
                             
                         </ul>
                     </form>
+
+                    <div class="full-height-spacer"></div>
                 </div>
             </div>
         </div>   
-        
-        <!-- jquery angular html5 bootstrap -->
-        <!-- it's the jhab stack -->
-        <script src="jquery.min.js"></script>
-        <script src="bootstrap.min.js"></script>
-        
-        <script src="angular.min.js"></script>
-        <script src="download.js"></script>
-        
-        <script src="codemirror.js"></script>
-        <script src="mode/javascript/javascript.js"></script>
-        <script src="mode/markdown/markdown.js"></script>
-        <script src="ui-codemirror.js"></script>
-        
-        <script src="vega.min.js"></script>
-        <script src="vega-lite.min.js"></script>
-        <script src="vega-embed.min.js"></script>
-        
-        <script src="index.js"></script>
     </body>
 </html>

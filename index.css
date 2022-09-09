@@ -31,3 +31,11 @@
   font-family: 'Nunito';
   src: url('fonts/Nunito-Regular.ttf');
 }
+
+.full-height-spacer {
+  height: 100%;
+}
+
+.menu {
+  padding-top: 10px;
+}

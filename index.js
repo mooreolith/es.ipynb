@@ -6,6 +6,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
   $scope.notebooks = [];
   $scope.current = null;
   $scope.currents = [];
+
+  $scope.currentCell = null;
       
   $scope.reservedNames = [
     'initialized', 
@@ -14,7 +16,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
   $scope.newline = '\n';
     
   // https://stackoverflow.com/a/10080841
-  $("textarea").keyup(function(e) {
+  $("textarea.code.cell").bind('input', function(e) {
     while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
         $(this).height($(this).height()+1);
     };
@@ -25,7 +27,23 @@ var RSNBController = RSNBApp.controller("RSNBController",
       notebook = $scope.current;
     }
       
-    var nb = Object.assign({}, notebook);
+    var nb = Object.assign({
+      "metadata" : {
+        "kernel_info": {
+            "name" : "Browser ECMAScript"
+        },
+        "language_info": {
+            "name" : "ECMAScript",
+            "version": "6",
+            "codemirror_mode": "javascript"
+        }
+      },
+      "nbformat": 4,
+      "nbformat_minor": 0,
+      "cells" : [
+      ]
+    }, notebook);
+
     nb.cells = nb.cells.map((cell, i) => {
       var cellCopy = Object.assign({}, cell)
       Object.assign(cellCopy, {
@@ -79,8 +97,9 @@ var RSNBController = RSNBApp.controller("RSNBController",
     if(!cell.editor){
       cell.editorOptions = {
         mode:  "javascript",
-        lineNumbers: true
+        lineNumbers: true, 
       }
+
       cell.editor = {
         codemirror: CodeMirror.fromTextArea(elem, cell.editorOptions)
       };
@@ -88,9 +107,18 @@ var RSNBController = RSNBApp.controller("RSNBController",
 
     cell.editor.codemirror.setValue(cell.source.join(''));
     cell.editor.codemirror.setOption('theme', 'eclipse');
-    cell.cellSource = cell.source.join('')
+    cell.editor.codemirror.addKeyMap('Ctrl-Enter', function(){
+      console.log('ctrl-enter');
+      $scope.run(cell, cell.source.join('\n'));
+    })
+    cell.cellSource = cell.source.join('\n');
 
     return cell;
+  }
+
+  $scope.setCurrent = function(notebook, cell){
+    $scope.current = notebook;
+    $scope.currentCell = cell;
   }
       
   $scope.initMarkdownCell = function(nbIndex, cellIndex){
@@ -197,7 +225,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
       }
     })
   }
-    
+
   $scope.addNotebook = function(){
     var name = prompt('A Name for the Notebook?');
     if(!name) return;
@@ -208,10 +236,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
      "cells": [
       {
        "cell_type": "code",
-       "execution_count": null,
        "metadata": {},
-       "outputs": [],
-       "source": []
+       "source": ``,
       }
      ],
      "metadata": {
@@ -219,8 +245,8 @@ var RSNBController = RSNBApp.controller("RSNBController",
        "name": "Javascript (Browser)"
       },
       "language_info": {
-        "name" : "Javascript",
-        "version": "262",
+        "name" : "ECMAScript",
+        "version": "6",
         "codemirror_mode": "javascript"
       }
      },
@@ -245,65 +271,65 @@ var RSNBController = RSNBApp.controller("RSNBController",
   }
 
   $scope.loadScript = function loadScript(url, callback){
-    var script = document.createElement("script");
+    var script = document.createElement("script")
     script.type = "text/javascript";
     if (script.readyState){  //IE
       script.onreadystatechange = function(){
         if (script.readyState == "loaded" ||
             script.readyState == "complete"){
           script.onreadystatechange = null;
-          callback(script.src);
+          callback();
         }
       };
     } else {  //Others
       script.onload = function(){
-        callback(script.src);
+        callback(script.textContent);
       };
     }
 
     script.src = url;
     document.getElementsByTagName("head")[0].appendChild(script);
-    return script.src;
+    return 
   }
     
-  $scope.run = async function(cell, outerCode){
-    var resultPr = new Promise((resolve, reject) => {
-      switch(cell.cell_type){
-        case 'code':
-          cell.source = code.split($scope.newline);
-          var result = window.eval(outerCode);
-        
+  $scope.run = async function(cell, code){
+    switch(cell.cell_type){
+      case 'code':
+        cell.source = code.split($scope.newline);
+        var result = window.eval(code);
+      
+        var output = {
+          "output_type" : "application/json",
+          "execution_count": null,
+          "data" : result,
+          "metadata": {}
+        };
+
+        cell.outputs = [output];
+        cell.execution_count = null;
+
+        await $scope.visualize(cell);
+
+        break;
+
+      case 'external_code':
+        cell.source = code;
+        $scope.loadScript(cell.source, function(code){
+          var result = window.eval(code);
+
           var output = {
             "output_type" : "application/json",
-            "execution_count": 42,
-            "data" : result,
+            "execution_count": 0,
+            "data": code.split($scope.newline),
             "metadata": {}
-          };
-        
+          }
+
           cell.outputs = [output];
           cell.execution_count = cell.execution_count === null ? 0 : cell.execution_count + 1;
-          resolve(result)
-          break;
+        })
+        break;
+    }
 
-        case 'external_code':
-          $scope.loadScript(outerCode, function(code){
-            var result = window.eval(code);
-            var output = {
-              "output_type" : "application/json",
-              "execution_count": 0,
-              "data": code.split($scope.newline),
-              "metadata": {}
-            }
-
-            cell.outputs = [output];
-            cell.execution_count = cell.execution_count === null ? 0 : cell.execution_count + 1;
-            resolve(result);
-          })
-          break;
-      }
-    })
-
-    var result = await resultPr;
     return result;
   }
 
@@ -338,7 +364,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
        "metadata": {},
        "outputs": [],
        "source": []
-      });
+      })
   }
       
   $scope.addCellAt = function(notebook, i){
@@ -365,14 +391,21 @@ var RSNBController = RSNBApp.controller("RSNBController",
       
   $scope.isVega = function(potVega){
     if(!potVega) return false;
-    return Object.keys(potVega).indexOf('$schema') > -1;
+    return potVega.data && potVega.encoding && potVega.mark;
   }
       
   $scope.visualize = function(cell){
-    if($scope.isVega($scope.getOutput(cell)))
-    vegaEmbed(`.output${cell.index}`, $scope.getOutput(cell)).then(result => {
-      cell.visualization = result;
-    })
+    if($scope.isVega($scope.getOutput(cell))){
+      var output = $scope.getOutput(cell);
+      cell.show = false;
+      vegaEmbed(
+        `.output${cell.index}`, 
+        output
+      ).then(result => {
+          cell.visualization = result;
+        }
+      )
+    }
   }
       
   $scope.visualizeAll = function(notebook){
@@ -386,17 +419,6 @@ var RSNBController = RSNBApp.controller("RSNBController",
       delete cell.visualization;
     }
   }
-      
-  $(window).bind('keydown', function(event){
-    if (event.ctrlKey || event.metaKey) {
-      switch (String.fromCharCode(event.which).toLowerCase()) {
-        case 's':
-          event.preventDefault();
-          $scope.storeNotebook($scope.current);
-          break;
-      }
-    }
-  });
       
   this.$onInit = function(){
     if(!window.localStorage.getItem('initialized')){
