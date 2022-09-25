@@ -34,7 +34,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
         },
         "language_info": {
             "name" : "ECMAScript",
-            "version": "6",
+            "version": "262",
             "codemirror_mode": "javascript"
         }
       },
@@ -254,7 +254,7 @@ var RSNBController = RSNBApp.controller("RSNBController",
       }
      },
      "nbformat": 4,
-     "nbformat_minor": 4
+     "nbformat_minor": 0
     }
       
     notebook.name = name;
@@ -320,14 +320,12 @@ var RSNBController = RSNBApp.controller("RSNBController",
         $scope.loadScript(cell.source, function(code){
           var result = window.eval(code);
 
-          var output = {
+          cell.outputs = [{
             "output_type" : "application/json",
             "execution_count": 0,
-            "data": code.split($scope.newline),
+            "data": result,
             "metadata": {}
-          }
-
-          cell.outputs = [output];
+          }];
           cell.execution_count = cell.execution_count === null ? 0 : cell.execution_count + 1;
         })
         break;
