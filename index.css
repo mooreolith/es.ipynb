@@ -27,6 +27,10 @@
   font-family: Nunito;
 }
 
+.cell + U .CodeMirror-line {
+  font-size: 10px;
+}
+
 @font-face {
   font-family: 'Nunito';
   src: url('fonts/Nunito-Regular.ttf');
