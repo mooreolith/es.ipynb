@@ -1,5 +1,5 @@
 # es.ipynb Reference
-Welcome to the most recent installment of es.ipynb. This is a Jupyter-like notebook, but for Browser-side JavaScript, and including a handful of bells and whistles.
+Welcome to the most recent installment of [es.ipynb](https://mooreolith.github.io/es.ipynb). This is a Jupyter-like notebook, but for Browser-side JavaScript, and including a handful of bells and whistles.
 
 ## Features
 If this is your first time here, download the [reference notebook](https://raw.githubusercontent.com/mooreolith/es.ipynb/main/example/Reference%20Notebook.es.ipynb), and upload it using the es.ipynb Upload link. Then click "Run All"
