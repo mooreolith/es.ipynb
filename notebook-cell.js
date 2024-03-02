@@ -105,6 +105,7 @@ class NotebookCell extends HTMLElement {
         <div class="buttons">
           <button class="run-cell">Run cell</button>
           <button class="remove-cell">Remove cell</button>
+          <button class="add-cell">Add cell below</button
         </div>
       </div>
     `;
@@ -125,11 +126,17 @@ class NotebookCell extends HTMLElement {
     this.editor.setOption("extraKeys", {
       'Ctrl-Enter': run
     });
-    this.runCellBtn = this.shadowRoot.querySelector('.run-cell');
-    this.runCellBtn.onclick = run.bind(this); 
 
     this.editor.refresh();   
 
+    this.runCellBtn = this.shadowRoot.querySelector('.run-cell');
+    this.runCellBtn.onclick = run.bind(this); 
+
+    this.addCellBtn = this.shadowRoot.querySelector('.add-cell');
+    this.addCellBtn.onclick = () => {
+      this.insertAdjacentHTML('afterend', "<notebook-cell></notebook-cell>");
+    }
+    
 //    this.removeCellBtn = this.shadowRoot.querySelector('.remove-cell');
 //    this.removeCellBtn.onclick = () => this.remove();
 
