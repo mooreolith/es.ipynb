@@ -1,4 +1,4 @@
-import { marked } from '/lib/marked.esm.js';
+import { marked } from '/es.ipynb/lib/marked.esm.js';
 
 class NotebookCell extends HTMLElement {  
   #cell_type = 'code';
