@@ -126,10 +126,9 @@ class ESNotebook extends HTMLElement {
     const link = document.createElement('a');
 
     const json = this.toJSON();
-    const name = this.#name.endsWith(' br ') ? 
-      this.#name.slice(0, this.#name.length - 4) : 
-      this.#name;
-    const file = new File([JSON.stringify(json)], `${name}.es.ipynb`)
+    const name = this.#name.replace(/.br./, '');
+    this.#name = name;
+    const file = new File([JSON.stringify(json)], `${name}.es.ipynb`);
 
     link.href = URL.createObjectURL(file)
     link.download = file.name;
