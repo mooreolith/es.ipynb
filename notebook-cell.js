@@ -119,6 +119,7 @@ class NotebookCell extends HTMLElement {
     this.editor.setOption('lineWrapping', true);
     this.editor.setOption('lineNumbers, true');
     this.editor.setOption('minLines', 10);
+    this.editor.setOption('tabSize', 2)
 
     this.editor.setSize('100%', '100%');
 
