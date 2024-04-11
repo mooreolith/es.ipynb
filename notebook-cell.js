@@ -206,7 +206,7 @@ class NotebookCell extends HTMLElement {
     let logged = '';
 
     console.log = function(){
-      logged = logged.concat(...arguments);
+      logged = logged.concat(...[...arguments].map(arg => `${arg}<br />`));
       log.apply(console, arguments);
     }
 
@@ -234,7 +234,7 @@ class NotebookCell extends HTMLElement {
         break;
     }
 
-    this.console.value = logged;
+    this.console.innerHTML = logged;
   }
 
   classifyOutput(){

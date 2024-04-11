@@ -1,6 +1,23 @@
 # es.ipynb Reference
 Welcome to the most recent installment of [es.ipynb](https://mooreolith.github.io/es.ipynb). This is a Jupyter-like notebook, but for Browser-side JavaScript, and including a handful of bells and whistles.
 
+## Installation
+
+```sh
+git clone https://github.com/mooreolith/es.ipynb.git
+python3 -m http.server
+```
+
+## Running
+
+Serve the es.ipynb directory (some of the file references are hard coded that way, I wrote this to run on github pages), so *not* from within the es.ipynb directory.
+
+```sh
+python3 -m http.server
+```
+
+Now you can open your browser at http://localhost:8000/es.ipynb.
+
 ## Features
 If this is your first time here, download the [reference notebook](https://raw.githubusercontent.com/mooreolith/es.ipynb/main/example/Reference%20Notebook.es.ipynb), and upload it using the es.ipynb Upload link. Then click "Run All"
 
