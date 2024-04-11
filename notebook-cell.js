@@ -82,6 +82,10 @@ class NotebookCell extends HTMLElement {
         .CodeMirror-wrap pre {
           word-wrap: break-word;
         }
+
+        p.error {
+          color: orangered;
+        }
       </style>
 
       <div class="container">
@@ -210,7 +214,11 @@ class NotebookCell extends HTMLElement {
       log.apply(console, arguments);
     }
 
-    this.#output = window.eval(this.#source);
+    try {
+      this.#output = window.eval(this.#source);
+    }catch(e){
+      this.#output = `<p class="error">${e}</p>`
+    }
     console.log = log;
 
     switch(this.classifyOutput()){
