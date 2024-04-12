@@ -102,6 +102,15 @@ class NotebookCell extends HTMLElement {
 
         fieldset {
           border: 0;
+          padding: 10px;
+        }
+
+        .select-code, .select-markdown, .select-raw {
+          padding: 10px;
+        }
+
+        .input {
+          margin-top: 10px;
         }
       </style>
 
@@ -111,7 +120,7 @@ class NotebookCell extends HTMLElement {
           <input class="select-markdown"  type="radio" name="cell-choice"  value="markdown">Markdown</input>
           <input class="select-raw"       type="radio" name="cell-choice"  value="raw">Raw</input>
         
-          <wc-codemirror 
+          <wc-codemirror class="input"
             style="width: 570px; height: 100%;"
             mode="javascript" 
             theme="eclipse">
