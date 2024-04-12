@@ -185,3 +185,13 @@ function exampleNotebook(){
 
   nb.fromJSON(json);
 }
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+if(urlParams.has('nb')){
+  const json = JSON.parse(urlParams.get('nb'));
+  container.innerHTML = '';
+  const nb = document.createElement('es-notebook');
+  container.appendChild(nb)
+  nb.fromJSON(json)
+}

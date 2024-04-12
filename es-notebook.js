@@ -57,7 +57,20 @@ class ESNotebook extends HTMLElement {
 
         div {
           flex-shrink: 0;
-          flex-grow: 1;s
+          flex-grow: 1;
+        }
+
+        button {
+          background: rgb(206, 215, 235);
+          color: black;
+          padding: 10px;
+          border: 0;
+          box-shadow: none;
+          border-radius: 0px;
+        }
+
+        button:hover {
+          background: white;
         }
       </style>
 

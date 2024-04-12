@@ -86,6 +86,23 @@ class NotebookCell extends HTMLElement {
         p.error {
           color: orangered;
         }
+
+        button {
+          background: rgb(206, 215, 235);
+          color: black;
+          padding: 10px;
+          border: 0;
+          box-shadow: none;
+          border-radius: 0px;
+        }
+
+        button:hover {
+          background: white;
+        }
+
+        fieldset {
+          border: 0;
+        }
       </style>
 
       <div class="container">

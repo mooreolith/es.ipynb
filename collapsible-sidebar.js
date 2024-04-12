@@ -37,7 +37,7 @@ class CollapsibleSidebar extends HTMLElement {
           text-size: 18px;
           padding: 10px;
         }
-
+        
         ::slotted(li:hover) {
           background: white;
         }
