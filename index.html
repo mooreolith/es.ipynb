@@ -4,21 +4,7 @@
     <title>es.ipynb</title>
     <link rel="stylesheet" href="/es.ipynb/lib/codemirror.css">
     <link rel="stylesheet" href="/es.ipynb/lib/eclipse.css">
-    <style>
-      .outer {
-        display: flex;
-      }
-      
-      .container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .outer {
-        padding-bottom: 100vh;
-      }
-    </style>
+    <link rel="stylesheet" href="/es.ipynb/index.css">
 
     <script src="/es.ipynb/lib/vega.min.js"></script>
     <script src="/es.ipynb/lib/vega-lite.min.js"></script>
@@ -35,6 +21,8 @@
       <collapsible-sidebar>
         <li slot="menu-item"><a onclick="upload()">Upload</a></li>
         <li slot="menu-item"><a onclick="save()">Download</a></li>
+        <li slot="menu-item"><a onclick="exampleNotebook()">Example Notebook</a></li>
+        <li slot="menu-item"><a href="https://github.com/mooreolith/es.ipynb">Source Code</a></li>
       </collapsible-sidebar>
       <div class="container">
         <es-notebook></es-notebook>

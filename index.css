@@ -1,3 +1,29 @@
+html, body {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
 es-notebook {
   width: 100%;
+}
+
+.outer {
+  display: flex;
+  padding-bottom: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.outer {
+
+  background-color: rgb(194, 208, 238);
+}
+
+li > a {
+  text-decoration: none;
 }

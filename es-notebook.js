@@ -138,7 +138,7 @@ class ESNotebook extends HTMLElement {
 
   fromJSON(nbJSON){
     this.#metadata = nbJSON.metadata;
-    this.#name = nbJSON.metadata.name;
+    this.#name = this.#metadata.name;
     this.shadowRoot.querySelector('.notebook-title').innerHTML = this.#name;
 
     for(let cellJSON of nbJSON.cells){

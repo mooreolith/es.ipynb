@@ -164,6 +164,7 @@ class NotebookCell extends HTMLElement {
   }
 
   clearOutput(){
+    this.#output = '';
     this.result.value = '';
     this.result.innerHTML = '';
   }

@@ -16,13 +16,32 @@ class CollapsibleSidebar extends HTMLElement {
           padding-left: 20px;
           padding-right: 20px;
           margin-right: 20px;
+
+          padding: 0;
+          list-style-type: none;
         }
+
         .show {
           display: inline-block;
         }
+
         .hide {
           display: none;
         }
+
+        ul {
+          padding-left: 0;
+        }
+
+        ::slotted(li) {
+          text-size: 18px;
+          padding: 10px;
+        }
+
+        ::slotted(li:hover) {
+          background: white;
+        }
+
       </style>
       <span class="show-menu hide"> (&gt;) </span>
       <div class="menu show">
