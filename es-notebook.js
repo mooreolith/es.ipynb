@@ -30,7 +30,6 @@ class ESNotebook extends HTMLElement {
 
         .container {
           width: 100%;
-          border-bottom: 1px dashed gray;
         }
 
         notebook-cell {
