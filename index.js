@@ -179,6 +179,7 @@ function exampleNotebook(){
     ]
   };
 
+  const container = document.querySelector('.container');
   container.innerHTML = '';
   const nb = document.createElement('es-notebook');
   container.appendChild(nb);
@@ -186,12 +187,20 @@ function exampleNotebook(){
   nb.fromJSON(json);
 }
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-if(urlParams.has('nb')){
-  const json = JSON.parse(urlParams.get('nb'));
-  container.innerHTML = '';
-  const nb = document.createElement('es-notebook');
-  container.appendChild(nb)
-  nb.fromJSON(json)
-}
+document.addEventListener('ready', function(){
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  if(urlParams.has('nb')){
+    const jsonStr = decodeURIComponent(urlParams.get('nb'));
+    const json = JSON.parse(jsonStr);
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const nb = document.querySelector('es-notebook');
+    console.log(nb)
+    container.appendChild(nb);
+
+    nb.fromJSON(json);
+  }
+})
