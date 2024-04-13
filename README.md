@@ -1,8 +1,8 @@
 # es.ipynb Reference
-Welcome to the most recent installment of [es.ipynb](https://mooreolith.github.io/es.ipynb). This is a Jupyter-like notebook, but for Browser-side JavaScript, and including a handful of bells and whistles.
+Welcome to the most recent installment of [es.ipynb](https://mooreolith.github.io/es.ipynb). This is a Jupyter-like notebook, but for Browser-side JavaScript, and including a handful of bells and whistles. Don't forget to save your work (CTRL-S, or Download).
 
 ## Running
-You don't have to install anything to run this program. It lives in the browser, and currently runs on github pages. Follow [this link](https://mooreolith.github.io/es.ipynb) to try it out now, and don't forget to save your work (CTRL-S, or Download).
+You don't have to install anything to run this program. It lives in the browser, and currently runs on github pages. 
 
 ## Installation
 You can install it through
