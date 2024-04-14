@@ -187,20 +187,22 @@ function exampleNotebook(){
   nb.fromJSON(json);
 }
 
-document.addEventListener('ready', function(){
+(async function(){
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  if(urlParams.has('nb')){
-    const jsonStr = decodeURIComponent(urlParams.get('nb'));
-    const json = JSON.parse(jsonStr);
+  if(urlParams.has('url')){
+    const url = decodeURI(urlParams.get('url'))
+    const response = await fetch(url);
+    const json = await response.json();
 
-    const container = document.querySelector('.container');
-    container.innerHTML = '';
+    if(json){
+      const container = document.querySelector('.container');
+      const nb = document.createElement('es-notebook');
 
-    const nb = document.querySelector('es-notebook');
-    console.log(nb)
-    container.appendChild(nb);
+      container.innerHTML = '';
+      container.appendChild(nb);
 
-    nb.fromJSON(json);
+      nb.fromJSON(json);
+    }
   }
-})
+})();
