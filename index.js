@@ -44,6 +44,14 @@ function save(){
   nb.save();
 }
 
+function reset(){
+  const container = document.querySelector('.container');
+  container.innerHTML = '';
+  
+  const nb = document.createElement('es-notebook');
+  container.appendChild(nb);
+}
+
 (async function(){
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
