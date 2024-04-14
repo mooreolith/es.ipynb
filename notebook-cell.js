@@ -168,9 +168,6 @@ class NotebookCell extends HTMLElement {
       this.insertAdjacentHTML('afterend', "<notebook-cell></notebook-cell>");
     }
     
-//    this.removeCellBtn = this.shadowRoot.querySelector('.remove-cell');
-//    this.removeCellBtn.onclick = () => this.remove();
-
     this.result = this.shadowRoot.querySelector('.result');
     this.console = this.shadowRoot.querySelector('.console');
 
@@ -191,8 +188,12 @@ class NotebookCell extends HTMLElement {
 
   clearOutput(){
     this.#output = '';
+    
     this.result.value = '';
     this.result.innerHTML = '';
+
+    this.console.value = '';
+    this.console.innerHTML = '';
   }
 
   run(){
@@ -306,11 +307,6 @@ class NotebookCell extends HTMLElement {
       "source": this.#source,
       "output": this.#output
     }
-  }
-
-  clearOutput(){
-    this.result.value = '';
-    this.result.innerHTML = '';
   }
 
   isUrl(){

@@ -78,6 +78,7 @@ class ESNotebook extends HTMLElement {
           <h1 class="notebook-title" contenteditable="true">${this.#name}</h1>
           <button class="add-cell">Add Cell</button>
           <button class="run-all">Run All</button>
+          <button class="clear-output">Clear Output</button>
         </div>
 
         <br />
@@ -100,6 +101,14 @@ class ESNotebook extends HTMLElement {
       const cells = this.shadowRoot.querySelectorAll('notebook-cell');
       for(let i=0; i<cells.length; i++){
         cells[i].run();
+      }
+    }
+
+    const clearOutputBtn = this.shadowRoot.querySelector('.clear-output');
+    clearOutputBtn.onclick = () => {
+      const cells = this.shadowRoot.querySelectorAll('notebook-cell');
+      for(let i=0; i<cells.length; i++){
+        cells[i].clearOutput();
       }
     }
 
