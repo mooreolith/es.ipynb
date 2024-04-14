@@ -327,12 +327,24 @@ class NotebookCell extends HTMLElement {
   }
 
   visualizeURL(){
-    var script = document.createElement("script")
-    script.type = "text/javascript";
-    script.src = this.#output;
+    if(this.#output.startsWith('http') && this.#output.endsWith('.mjs')){
+      var script = document.createElement("script");
+      script.type = "module";
+      script.src = this.#output;
+      document.querySelector('head').appendChild(script);
+    }else if(this.#output.startsWith('http') && this.#output.endsWith('.js')){
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = this.#output;
+      document.querySelector('head').appendChild(script);
+    }else if(this.#output.startsWith('http') && this.#output.endsWith('.css')){
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = this.#output;
+      document.querySelector('head').appendChild(link);
+    }
 
-    document.querySelector('head').appendChild(script);
-    return;
+    this.result.innerHTML = `Added ${this.#output} to the document head`;
   }
 
   isHTML(){
