@@ -20,98 +20,8 @@ class NotebookCell extends HTMLElement {
   connectedCallback(){
     this.shadowRoot.innerHTML = `
       <style>
-        :host {
-          display: block;
-          width: 100%;
-          max-width: 600px;
-          margin-top: 10px;
-          margin-bottom: 10px;
-          border: 1px dashed gray;
-        }
-
-        table {
-          border-collapse: collapse;
-          margin: 25px;
-          font-size: 0.9em;
-          font-family: sans-serif;
-          min-width: 400px;
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        }
-
-        table thead tr {
-          background-color: #009879;
-          color: #ffffff;
-          text-align: left;
-        }
-
-        th, td {
-          padding: 12px 15px;
-        }
-
-        table tbody tr {
-          border-bottom: 1px solid #dddddd;
-        }
-        
-        table tbody tr:nth-of-type(even) {
-            background-color: #f3f3f3;
-        }
-        
-        table tbody tr:last-of-type {
-            border-bottom: 2px solid #009879;
-        }
-
-        .container {
-          position: relative;
-          width: 600px;
-          top: 0;
-          left: 0;
-          overflow: hidden;
-        }
-
-        input, wc-codemirror, div.output {
-          top: 0;
-          left: 0;
-          overflow: hidden;
-        }
-
-        wc-codemirror {
-          width: 100vw;
-          max-width: 100vw;
-        }
-
-        .CodeMirror-wrap pre {
-          word-wrap: break-word;
-        }
-
-        p.error {
-          color: orangered;
-        }
-
-        button {
-          background: rgb(206, 215, 235);
-          color: black;
-          padding: 10px;
-          border: 0;
-          box-shadow: none;
-          border-radius: 0px;
-        }
-
-        button:hover {
-          background: white;
-        }
-
-        fieldset {
-          border: 0;
-          padding: 10px;
-        }
-
-        .select-code, .select-markdown, .select-raw {
-          padding: 10px;
-        }
-
-        .input {
-          margin-top: 10px;
-        }
+        @import url("notebook-cell-window.css") screen and (width > 480px);
+        @import url("notebook-cell-mobile.css") screen and (width <= 480px);
       </style>
 
       <div class="container">
@@ -121,21 +31,21 @@ class NotebookCell extends HTMLElement {
           <input class="select-raw"       type="radio" name="cell-choice"  value="raw">Raw</input>
         
           <wc-codemirror class="input"
-            style="width: 570px; height: 100%;"
+            style="width: 100%; height: 100%;"
             mode="javascript" 
             theme="eclipse">
           </wc-codemirror>
           
           <div class="output">
-            <output class="console"></output><br>
-            <output class="result"></output><br>
+            <output class="console"></output>
+            <output class="result"></output>
           </div>
         </fieldset>
 
         <div class="buttons">
           <button class="run-cell">Run cell</button>
           <button class="remove-cell">Remove cell</button>
-          <button class="add-cell">Add cell below</button
+          <button class="add-cell">Add cell below</button>
         </div>
       </div>
     `;

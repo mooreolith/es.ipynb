@@ -9,43 +9,13 @@ class CollapsibleSidebar extends HTMLElement {
   connectedCallback(){ 
     this.shadowRoot.innerHTML = `
       <style>
-        :host {
-          display: inline-block;
-          border-right: 1px dashed black;
-          padding-top: 20px;
-          padding-left: 20px;
-          padding-right: 20px;
-          margin-right: 20px;
-
-          padding: 0;
-          list-style-type: none;
-        }
-
-        .show {
-          display: inline-block;
-        }
-
-        .hide {
-          display: none;
-        }
-
-        ul {
-          padding-left: 0;
-        }
-
-        ::slotted(li) {
-          text-size: 18px;
-          padding: 10px;
-        }
-        
-        ::slotted(li:hover) {
-          background: white;
-        }
-
+        @import url("collapsible-sidebar-window.css") screen and (width > 480px);
+        @import url("collapsible-sidebar-mobile.css") screen and (width <= 480px);
       </style>
-      <span class="show-menu hide"> (&gt;) </span>
-      <div class="menu show">
-        <span class="hide-menu"> (&lt;) </span>
+      
+      <span class="show-menu show"> (&gt;) </span>
+      <span class="hide-menu hide"> (&lt;) </span>
+      <div class="menu hide">
         <ul>
           <slot name="menu-item"></slot>
         </ul>
@@ -65,6 +35,10 @@ class CollapsibleSidebar extends HTMLElement {
     showMenu.classList.remove('show');
     showMenu.classList.add('hide')
 
+    const hideMenu = this.shadowRoot.querySelector('.hide-menu')
+    hideMenu.classList.remove('hide');
+    hideMenu.classList.add('show');
+
     const menu = this.shadowRoot.querySelector('.menu');
     menu.classList.remove('hide');
     menu.classList.add('show');
@@ -74,6 +48,10 @@ class CollapsibleSidebar extends HTMLElement {
     const showMenu = this.shadowRoot.querySelector('.show-menu')
     showMenu.classList.remove('hide');
     showMenu.classList.add('show');
+
+    const hideMenu = this.shadowRoot.querySelector('.hide-menu')
+    hideMenu.classList.remove('show');
+    hideMenu.classList.add('hide');
 
     const menu = this.shadowRoot.querySelector('.menu');
     menu.classList.remove('show');

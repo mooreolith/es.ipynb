@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>es.ipynb</title>
     <link rel="stylesheet" href="./lib/codemirror.css">
     <link rel="stylesheet" href="./lib/eclipse.css">
-    <link rel="stylesheet" href="./index.css">
+    <style>
+      @import url("index-window.css") screen and (width > 480px);
+      @import url("index-mobile.css") screen and (width <= 480px);
+    </style>
 
     <script src="./lib/vega.min.js"></script>
     <script src="./lib/vega-lite.min.js"></script>
@@ -19,12 +23,12 @@
   <body>
     <div class="outer">
       <collapsible-sidebar>
-        <li slot="menu-item"><a onclick="reset()">Reset Notebook</a></li>
-        <li slot="menu-item"><a onclick="upload()">Open Notebook</a></li>
-        <li slot="menu-item"><a onclick="save()">Save Notebook</a></li>
-        <li slot="menu-item"><a href="https://mooreolith.github.io/es.ipynb?url=https://mooreolith.github.io/es.ipynb/example/Reference%20Notebook.es.ipynb">Reference Notebook</a></li>
-        <li slot="menu-item"><a href="./examples.html" target="_blank">Example Notebooks</a></li>
-        <li slot="menu-item"><a href="https://github.com/mooreolith/es.ipynb" target="_blank">Source Code</a></li>
+        <li class="menu-item" slot="menu-item"><a href="/">Clear</a></li>
+        <li class="menu-item" slot="menu-item"><a onclick="upload()">Open Notebook</a></li>
+        <li class="menu-item" slot="menu-item"><a onclick="save()">Save Notebook</a></li>
+        <li class="menu-item" slot="menu-item"><a href="/?url=example/Reference%20Notebook.es.ipynb">Reference Notebook</a></li>
+        <li class="menu-item" slot="menu-item"><a href="./examples.html" target="_blank">Example Notebooks</a></li>
+        <li class="menu-item" slot="menu-item"><a href="https://github.com/mooreolith/es.ipynb" target="_blank">Source Code</a></li>
       </collapsible-sidebar>
       <div class="container">
         <es-notebook></es-notebook>

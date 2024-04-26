@@ -22,55 +22,8 @@ class ESNotebook extends HTMLElement {
   connectedCallback(){
     this.shadowRoot.innerHTML = `
       <style>
-        :host {
-          display: flex;
-          width: 100%;
-          flex-shrink: 0;
-        }
-
-        .container {
-          width: 100%;
-        }
-
-        notebook-cell {
-          flex-grow: 100;
-          width: 100%;
-        }
-
-        .add-cell {
-          margin-bottom: 20px;
-        }
-
-        notebook-cell {
-          width: 100%;
-        }
-
-        .container {
-          display: inline-block;
-          alignment: vertical-align;
-        }
-        .footer {
-          display: inline-block;
-          alignment: vertical-align;
-        }
-
-        div {
-          flex-shrink: 0;
-          flex-grow: 1;
-        }
-
-        button {
-          background: rgb(206, 215, 235);
-          color: black;
-          padding: 10px;
-          border: 0;
-          box-shadow: none;
-          border-radius: 0px;
-        }
-
-        button:hover {
-          background: white;
-        }
+        @import url("es-notebook-window.css") screen and (width > 480px);
+        @import url("es-notebook-mobile.css") screen and (width <= 480px);
       </style>
 
       <div>

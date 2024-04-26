@@ -1,0 +1,15 @@
+@media screen and (width <= 480px){
+  html, body {
+    padding: 0;
+    margin: 0;
+    border: 0;
+
+    background-color: rgb(206, 215, 235);
+    overflow-x: hidden;
+  }
+
+  li > a, li > a:visited, li > a:hover, li > a:active {
+    text-decoration: none;
+    color: black;
+  }
+}

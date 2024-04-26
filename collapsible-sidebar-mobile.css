@@ -1,0 +1,75 @@
+@media screen and (width <= 480px) {
+  html, body {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: rgb(206, 215, 235);
+  }
+
+  es-notebook {
+  }
+
+  .outer {
+  }
+
+  .container {
+  }
+
+  .outer {
+  }
+
+  li > a, li > a:visited, li > a:hover, li > a:active {
+    text-decoration: none;
+    color: black;
+  }
+
+  :host, span, div, ul {
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .show {
+    display: inline-block;
+  }
+
+  ul {
+    text-align: justify;
+  }
+
+  ::slotted(li) {
+    list-style-type: none;
+    float: left;
+    padding: 10px;
+  }
+
+  ::slotted(li) > a {
+    text-decoration: none;
+  }
+
+  ::slotted(li:hover) {
+    background-color: white;
+  }
+
+  div {
+    border-bottom: 1px dashed cornflowerblue;
+  }
+
+  .show-menu {
+    width: 100%;
+    background-color: cornflowerblue;
+  }
+
+  .menu {
+    width: 100%;
+  }
+
+  .hide-menu {
+    width: 100%;
+    background-color: cornflowerblue;
+  }
+}
