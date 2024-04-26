@@ -62,6 +62,7 @@
   .show-menu {
     width: 100%;
     background-color: cornflowerblue;
+    height: 25px;
   }
 
   .menu {
@@ -71,5 +72,6 @@
   .hide-menu {
     width: 100%;
     background-color: cornflowerblue;
+    height: 25px;
   }
 }
