@@ -18,6 +18,11 @@
   display: none;
 }
 
+.show-menu, .hide-menu {
+  width: 100%;
+  background-color: cornflowerblue
+}
+
 ul {
   padding-left: 0;
 }
