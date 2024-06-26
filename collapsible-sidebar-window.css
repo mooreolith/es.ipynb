@@ -29,8 +29,15 @@ ul {
 
 ::slotted(li) {
   padding: 10px;
+  list-style-type: none;
+  padding: 10px;
 }
 
 ::slotted(li:hover) {
   background: white;
+}
+
+::slotted(li > a) {
+  list-style-type: none;
+  color: black;
 }

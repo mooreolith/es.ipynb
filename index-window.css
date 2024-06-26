@@ -24,8 +24,4 @@
     background-color: rgb(206, 215, 235);
   }
 
-  li > a {
-    text-decoration: none;
-    color: black;
-  }
 }
