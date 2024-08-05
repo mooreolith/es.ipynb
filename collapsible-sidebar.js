@@ -13,8 +13,8 @@ class CollapsibleSidebar extends HTMLElement {
         @import url("collapsible-sidebar-mobile.css") screen and (width <= 480px);
       </style>
       
-      <span class="show-menu show"> (&gt;) </span>
-      <span class="hide-menu hide"> (&lt;) </span>
+      <span class="show-menu show"> &#9776; </span>
+      <span class="hide-menu hide"> &#9776; </span>
       <div class="menu hide">
         <ul>
           <slot name="menu-item"></slot>
